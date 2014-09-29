@@ -497,26 +497,8 @@ void test_diff_submodules__skips_empty_includes_used(void)
 void test_diff_submodules__can_commit_subrepo(void) {
 	g_repo = cl_git_sandbox_init("empty_standard_repo");
 
-	{
-		git_repository *r2;
-		git_index *r2index;
-		git_oid oid;
-		git_commit *commit;
-
-		cl_git_pass(git_repository_init(&r2, "empty_standard_repo/subrepo", 0));
-
-		cl_git_mkfile("empty_standard_repo/subrepo/README.txt", "hello\n");
-
-		cl_git_pass(git_repository_index(&r2index, r2));
-		cl_git_pass(git_index_add_bypath(r2index, "README.txt"));
-		cl_repo_commit_from_index(&oid, r2, NULL, 0, "first commit");
-
-		cl_git_pass(git_commit_lookup(&commit, r2, &oid));
-
-		cl_assert_equal_i(0, git_commit_parentcount(commit));
-
-		git_repository_free(r2);
-	}
+	p_mkdir("empty_standard_repo/subrepo", 0777);
+	cl_git_mkfile("empty_standard_repo/subrepo/README.txt", "hello\n");
 
 	git_index *index;
 	git_oid oid;
